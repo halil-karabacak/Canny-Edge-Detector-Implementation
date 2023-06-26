@@ -1,1 +1,4 @@
-# Canny-Edge-Detector-Implementation
+### Implemented Algorithms So Far
+
+- Canny Edge Detection
+- SIFT (ongoing)
