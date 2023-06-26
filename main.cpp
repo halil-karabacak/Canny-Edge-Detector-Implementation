@@ -2,7 +2,7 @@
 
 #include "Gaussian.h"
 #include "sobelFilter.h"
-#include "FileIO.h"
+#include "Image.h"
 
 
 int main()

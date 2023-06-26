@@ -1,6 +1,6 @@
 #include "matrix.h"
 #include "iostream"
-#include "FileIO.h"
+#include "Image.h"
 #include <math.h>
 #include <Canny.h>
 
