@@ -2,9 +2,18 @@
 
 #include <matrix.h>
 
-class sobelFilter : public Matrix
-{
-public:
-    sobelFilter(int filterType);
+namespace CV {
+    namespace Canny {
+        enum class FilterType {
+            X,
+            Y
+        };
+        class SobelFilter : public CV::Utils::Matrix
+        {
+        public:
+            SobelFilter(CV::Canny::FilterType Type);
 
-};
+        };
+    }
+}
+

@@ -3,9 +3,17 @@
 
 #include <matrix.h>
 
-void convolution(Matrix& output, Matrix& image, Matrix& filter, int padding, double scaleFactor);
-double convSum(Matrix& image, Matrix& filter, int padding, int centerRow, int centerCol, int offset);
-void calculateIntensity(Matrix& output, Matrix& edgeX, Matrix& edgeY);
-void calculateEdgeDir(Matrix& output, Matrix& edgeX, Matrix& edgeY, double threshold);
-void nonMaxSupression(Matrix& output, Matrix& edgeIntensity, Matrix& edgeDir);
-int maxTrio(int before, int center, int after);
+namespace CV {
+	namespace Canny {
+		class Canny {
+		public:
+			static void convolution(CV::Utils::Matrix& output, CV::Utils::Matrix& image, CV::Utils::Matrix& filter, int padding, double scaleFactor);
+			static double convSum(CV::Utils::Matrix& image, CV::Utils::Matrix& filter, int padding, int centerRow, int centerCol, int offset);
+			static void calculateIntensity(CV::Utils::Matrix& output, CV::Utils::Matrix& edgeX, CV::Utils::Matrix& edgeY);
+			static void calculateEdgeDir(CV::Utils::Matrix& output, CV::Utils::Matrix& edgeX, CV::Utils::Matrix& edgeY, double threshold);
+			static void nonMaxSupression(CV::Utils::Matrix& output, CV::Utils::Matrix& edgeIntensity, CV::Utils::Matrix& edgeDir);
+			static int maxTrio(int before, int center, int after);
+		};
+	}
+}
+

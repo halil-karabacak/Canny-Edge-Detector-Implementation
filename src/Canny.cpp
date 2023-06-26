@@ -1,10 +1,13 @@
 #include "matrix.h"
 #include "iostream"
-#include "Utils.h"
+#include "FileIO.h"
 #include <math.h>
+#include <Canny.h>
 
 
-void convolution(Matrix& output, Matrix& image, Matrix& filter, int padding, double scaleFactor)
+using CV::Utils::Matrix;
+
+void CV::Canny::Canny::convolution(Matrix& output, Matrix& image, Matrix& filter, int padding, double scaleFactor)
 {
     /*
      * This function implements convolution on an image using specified padding
@@ -21,14 +24,14 @@ void convolution(Matrix& output, Matrix& image, Matrix& filter, int padding, dou
     {
         for (int j = 0; j < image.col; j++)
         {
-            output.mat[i][j] = convSum(image, filter, padding, i, j, offset);
+            output.mat[i][j] = CV::Canny::Canny::convSum(image, filter, padding, i, j, offset);
             output.mat[i][j] /= scaleFactor;
         }
     }
 }
 
 
-double convSum(Matrix& image, Matrix& filter, int padding, int centerRow, int centerCol, int offset)
+double CV::Canny::Canny::convSum(Matrix& image, Matrix& filter, int padding, int centerRow, int centerCol, int offset)
 {
     double sum = 0;
 
@@ -56,7 +59,7 @@ double convSum(Matrix& image, Matrix& filter, int padding, int centerRow, int ce
     return sum;
 }
 
-void calculateIntensity(Matrix& output, Matrix& edgeX, Matrix& edgeY)
+void CV::Canny::Canny::calculateIntensity(Matrix& output, Matrix& edgeX, Matrix& edgeY)
 {
     for (int i = 0; i < output.row; i++)
     {
@@ -106,7 +109,7 @@ void calculateEdgeDir(Matrix& output, Matrix& edgeX, Matrix& edgeY, double thres
 }
 
 
-void nonMaxSupression(Matrix& output, Matrix& edgeIntensity, Matrix& edgeDir)
+void CV::Canny::Canny::nonMaxSupression(Matrix& output, Matrix& edgeIntensity, Matrix& edgeDir)
 {
     // no edges at the limits of the image
     const int offset = 1;
@@ -123,7 +126,7 @@ void nonMaxSupression(Matrix& output, Matrix& edgeIntensity, Matrix& edgeDir)
                 int center = static_cast<int>(edgeIntensity.mat[i][j]);
                 int after = static_cast<int>(edgeIntensity.mat[i + 1][j]);
 
-                if (maxTrio(before, center, after) != center)
+                if (CV::Canny::Canny::maxTrio(before, center, after) != center)
                 {
                     output.mat[i][j] = 0;
                 }
@@ -139,7 +142,7 @@ void nonMaxSupression(Matrix& output, Matrix& edgeIntensity, Matrix& edgeDir)
                 int center = static_cast<int>(edgeIntensity.mat[i][j]);
                 int after = static_cast<int>(edgeIntensity.mat[i][j + 1]);
 
-                if (maxTrio(before, center, after) != center)
+                if (CV::Canny::Canny::maxTrio(before, center, after) != center)
                 {
                     output.mat[i][j] = 0;
                 }
@@ -155,7 +158,7 @@ void nonMaxSupression(Matrix& output, Matrix& edgeIntensity, Matrix& edgeDir)
                 int center = static_cast<int>(edgeIntensity.mat[i][j]);
                 int after = static_cast<int>(edgeIntensity.mat[i + 1][j - 1]);
 
-                if (maxTrio(before, center, after) != center)
+                if (CV::Canny::Canny::maxTrio(before, center, after) != center)
                 {
                     output.mat[i][j] = 0;
                 }
@@ -171,7 +174,7 @@ void nonMaxSupression(Matrix& output, Matrix& edgeIntensity, Matrix& edgeDir)
                 int center = static_cast<int>(edgeIntensity.mat[i][j]);
                 int after = static_cast<int>(edgeIntensity.mat[i + 1][j + 1]);
 
-                if (maxTrio(before, center, after) != center)
+                if (CV::Canny::Canny::maxTrio(before, center, after) != center)
                 {
                     output.mat[i][j] = 0;
                 }
@@ -193,7 +196,7 @@ void nonMaxSupression(Matrix& output, Matrix& edgeIntensity, Matrix& edgeDir)
     }
 }
 
-int maxTrio(int before, int center, int after)
+int CV::Canny::Canny::maxTrio(int before, int center, int after)
 {
     /*
      * Returns maximum of the given three value

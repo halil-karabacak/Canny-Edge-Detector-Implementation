@@ -1,4 +1,4 @@
-#include "GaussianFilter.h"
+#include "Gaussian.h"
 #include <math.h>
 #include <iostream>
 
@@ -7,7 +7,7 @@ const double PI = 3.141592653589793238463;
 int kernelSizeCalculator(double sigma);
 double gaussianDist(int x, int y, double sigma);
 
-GaussianFilter::GaussianFilter(double sigma) :Matrix()
+CV::Canny::GaussianFilter::GaussianFilter(double sigma) :Matrix()
 {
     int kernelSize = kernelSizeCalculator(sigma);
 

@@ -1,6 +1,27 @@
 #pragma once
 
-#include  <string>
+#include <string>
+#include <memory>
+#include <iostream>
+#include <fstream>
 #include <vector>
+#include <fstream>
+#include <cstring>
+#include <cstddef>
 
-void readImage(std::string file_path, )
+
+namespace CV {
+	namespace Utils {
+		struct RGB {
+			unsigned char r, g, b;
+		};
+
+		class Image {
+		public:
+			static std::shared_ptr<Image> loadPNG(std::string file_path);
+
+			int width, height;
+			std::vector<RGB> rgbData;
+		};
+	}
+}

@@ -1,15 +1,20 @@
 #pragma once
 
-class Matrix {
-public :
-	Matrix();
-	Matrix(int row, int column, double** data);
-	Matrix(int row, int column);
+namespace CV {
+	namespace Utils {
+		class Matrix {
+		public:
+			Matrix();
+			Matrix(int row, int column, double** data);
+			Matrix(int row, int column);
 
-	double normalize();
+			double normalize();
 
 
-	int row;
-	int col;
-	double** mat;
-};
+			int row;
+			int col;
+			double** mat;
+		};
+	}
+}
+

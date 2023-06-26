@@ -2,15 +2,15 @@
 #include <iostream>
 
 
-Matrix::Matrix() {
+CV::Utils::Matrix::Matrix() {
 	row = 0;
 	col = 0;
 	mat = 0;
 }
 
-Matrix::Matrix(int row, int column) {
-	this.row = row;
-	this.col = column;
+CV::Utils::Matrix::Matrix(int row, int column) {
+	this->row = row;
+	this->col = column;
 
 	this->mat = new double* [row];
 
@@ -22,7 +22,7 @@ Matrix::Matrix(int row, int column) {
 	}
 }
 
-double Matrix::normalize() {
+double CV::Utils::Matrix::normalize() {
 	double maxInt = 0;
 
 	for (int i = 0; i < row; i++) {
