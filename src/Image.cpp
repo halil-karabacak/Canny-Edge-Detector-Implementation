@@ -8,7 +8,6 @@ inline bool IsPNG(const char* data) {
         data[4] == 0x0D && data[5] == 0x0A && data[6] == 0x1A && data[7] == 0x0A);
 }
 
-
 std::shared_ptr<CV::Utils::Image> CV::Utils::Image::loadPNG(std::string file_path)
 {
     std::shared_ptr<CV::Utils::Image> Image;
@@ -139,6 +138,108 @@ void CV::Utils::Image::ApplyGaussianBlur(int radius)
         ApplyGaussianBlurRGB(radius);
 }
 
+std::vector<std::shared_ptr<CV::Utils::Image>> CV::Utils::Image::BuildScaleSpacePyramid(int levels, float sigma0, float k)
+{
+    std::vector<std::shared_ptr<Image>> pyramid;
+    pyramid.push_back(std::enable_shared_from_this<Image>::shared_from_this());  // Base level is the original image
+    float sigma = sigma0;
+
+    for (int level = 1; level <= levels; level++) {
+        sigma *= k;
+
+        std::shared_ptr<Image> blurredImage = std::make_shared<Image>();
+        blurredImage->width = width / 2;
+        blurredImage->height = height / 2;
+        blurredImage->grayData.resize(blurredImage->width * blurredImage->height);
+
+        for (int y = 0; y < blurredImage->height; y++) {
+            for (int x = 0; x < blurredImage->width; x++) {
+                float sum = 0.0f;
+                float totalWeight = 0.0f;
+                int kernelRadius = 3 * sigma; // 
+
+                for (int j = -kernelRadius; j <= kernelRadius; j++) {
+                    for (int i = -kernelRadius; i <= kernelRadius; i++) {
+                        int neighborX = 2 * x + i;
+                        int neighborY = 2 * y + j;
+
+                        if (neighborX >= 0 && neighborX < width && neighborY >= 0 && neighborY < height) {
+                            uint8_t neighborPixel = grayData[neighborY * width + neighborX];
+                            float weight = gaussianKernel(i, j, sigma);
+                            sum += weight * neighborPixel;
+                            totalWeight += weight;
+                        }
+                    }
+                }
+
+                sum /= totalWeight;
+                blurredImage->grayData[y * blurredImage->width + x] = static_cast<uint8_t>(sum);
+            }
+        }
+
+        pyramid.push_back(blurredImage);
+    }
+
+    return pyramid;
+}
+
+void CV::Utils::Image::GenerateDOGImages(int levels, int sigma0, int k)
+{
+    std::vector<std::shared_ptr<Image>> pyramid = this->BuildScaleSpacePyramid(levels, sigma0, k);
+    DOGImages.clear(); 
+    for (int level = 1; level < pyramid.size(); level++) {
+        std::shared_ptr<Image> dogImage = std::make_shared<Image>();
+        dogImage->width = pyramid[level]->width;
+        dogImage->height = pyramid[level]->height;
+        dogImage->grayData.resize(dogImage->width * dogImage->height);
+
+        // Subtract adjacent scales to calculate the DoG image
+        for (int i = 0; i < dogImage->grayData.size(); i++) {
+            dogImage->grayData[i] = pyramid[level]->grayData[i] - pyramid[level - 1]->grayData[i];
+        }
+
+        DOGImages.push_back(dogImage);
+    }
+}
+
+std::vector<std::shared_ptr<CV::Utils::Image>> CV::Utils::Image::GenerateExtremaImages()
+{
+    std::vector<std::shared_ptr<Image>> extremaImages;
+
+    for (int level = 1; level < DOGImages.size() - 1; level++) {
+        std::shared_ptr<Image> extremaImage = std::make_shared<Image>();
+        extremaImage->width = DOGImages[level]->width;
+        extremaImage->height = DOGImages[level]->height;
+        extremaImage->grayData.resize(extremaImage->width * extremaImage->height);
+
+        for (int y = 1; y < extremaImage->height - 1; y++) {
+            for (int x = 1; x < extremaImage->width - 1; x++) {
+                uint8_t pixelValue = DOGImages[level]->grayData[y * extremaImage->width + x];
+
+                bool isExtrema = true;
+                for (int j = -1; j <= 1; j++) {
+                    for (int i = -1; i <= 1; i++) {
+                        for (int k = -1; k <= 1; k++) {
+                            if (DOGImages[level + j]->grayData[(y + k) * extremaImage->width + (x + i)] >= pixelValue) {
+                                isExtrema = false;
+                                break;
+                            }
+                        }
+                        if (!isExtrema) break;
+                    }
+                    if (!isExtrema) break;
+                }
+
+                if (isExtrema) {
+                    extremaImage->grayData[y * extremaImage->width + x] = 255;
+                }
+            }
+        }
+        extremaImages.push_back(extremaImage);
+    }
+    return extremaImages;
+}
+
 void CV::Utils::Image::ApplyGaussianBlurRGB(int radius)
 {
     int kernelSize = static_cast<int>(6 * radius + 1);
@@ -192,13 +293,11 @@ void CV::Utils::Image::ApplyGaussianBlurGray(int radius)
             float sum = 0.0f;
             float totalWeight = 0.0f;
 
-            // Apply blur to surrounding pixels within the kernel
             for (int j = -radius; j <= radius; j++) {
                 for (int i = -radius; i <= radius; i++) {
                     int neighborX = x + i;
                     int neighborY = y + j;
 
-                    // Check if neighbor pixel is within bounds
                     if (neighborX >= 0 && neighborX < width && neighborY >= 0 && neighborY < height) {
                         uint8_t neighborPixel = grayData[neighborY * width + neighborX];
                         float weight = gaussianKernel(i, j, radius);
@@ -208,13 +307,9 @@ void CV::Utils::Image::ApplyGaussianBlurGray(int radius)
                 }
             }
 
-            // Normalize the accumulated value
             sum /= totalWeight;
-
             blurredData[y * width + x] = static_cast<uint8_t>(sum);
         }
     }
-
-    // Replace the original gray data with the blurred data
     grayData = blurredData;
 }
