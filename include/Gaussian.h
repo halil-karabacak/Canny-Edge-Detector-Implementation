@@ -1,16 +1,15 @@
 #pragma once
 
-
-#include <matrix.h>
+#include <opencv2/core.hpp>
+#include <opencv2/opencv.hpp>
 
 namespace CV {
-    namespace Canny {
-        class GaussianFilter : public CV::Utils::Matrix
+    namespace Detection {
+        class GaussianFilter
         {
         public:
-            GaussianFilter(double sigma);
             double scaleFactor;
-
+            void static calculateGradient(const cv::Mat& image, cv::Mat& gradientMagnitude, cv::Mat& gradientAngle);
         };
     }
 }
