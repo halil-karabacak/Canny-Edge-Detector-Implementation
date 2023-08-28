@@ -7,6 +7,6 @@
 
 int main()
 {
-    std::cout << "SA";
+    auto img = CV::Utils::Image::loadPNG("buran.png");
     return 0;
 }

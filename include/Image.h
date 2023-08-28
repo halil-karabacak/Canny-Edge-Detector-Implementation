@@ -3,19 +3,15 @@
 #include <string>
 #include <memory>
 #include <iostream>
-#include <fstream>
+#include <Eigen/Dense>
 #include <vector>
-#include <fstream>
-#include <cstring>
-#include <cstddef>
-
+#include <opencv2/core.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/opencv.hpp>
 
 namespace CV {
 	namespace Utils {
-		struct RGB {
-			unsigned char r, g, b;
-		};
-
 		enum class ImageType {
 			RGB,
 			BGR,
@@ -47,9 +43,9 @@ namespace CV {
 			std::vector<std::shared_ptr<Image>> GenerateExtremaImages();
 
 			int width, height;
-			std::vector<RGB> rgbData;
-			std::vector<uint8_t> grayData;
+			std::vector<Eigen::Vector3i> rgbData;
 			ImageType type = ImageType::DEFAULT;
+			cv::Mat mat;
 		private:
 			std::vector<std::shared_ptr<Image>> DOGImages;
 			void ApplyGaussianBlurRGB(int radius);
