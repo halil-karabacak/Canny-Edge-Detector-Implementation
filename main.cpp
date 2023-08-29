@@ -1,12 +1,19 @@
-#include "matrix.h"
+#include "Canny.h"
+#include "Image.h"
 
-#include "Gaussian.h"
-#include "sobelFilter.h"
-#include "FileIO.h"
 
 
 int main()
 {
-    std::cout << "SA";
-    return 0;
+    auto image = CV::Utils::Image::loadPNG("../data/buran.jpg");
+    auto mat = image.mat;
+
+    cv::Mat out;
+    CV::Detection::Canny::cannyEdgeDetector(mat, out);
+    
+
+    cv::imshow("Canny Edge Detection", out);
+    cv::imwrite("../data/canny_out.png", out);
+
+    cv::waitKey(0);
 }
