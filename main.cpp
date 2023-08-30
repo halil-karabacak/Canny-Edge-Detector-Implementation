@@ -9,11 +9,11 @@ int main()
     auto mat = image.mat;
 
     cv::Mat out;
-    CV::Detection::Canny::cannyEdgeDetector(mat, out);
+    out = CV::Detection::GaussianFilter::ApplyGaussianBlur(mat, 5);
     
 
-    cv::imshow("Canny Edge Detection", out);
-    cv::imwrite("../data/canny_out.png", out);
+    cv::imshow("Gaus Blur", out);
+    cv::imwrite("../data/gaus_blur.png", out);
 
     cv::waitKey(0);
 }
