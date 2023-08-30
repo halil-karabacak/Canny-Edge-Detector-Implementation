@@ -13,7 +13,6 @@ namespace CV {
 
             static std::vector<std::vector<double>> Produce2dGaussianKernel(double sigma);
             static cv::Mat ApplyGaussianBlur(cv::Mat input, double sigma);
-            static cv::Mat ApplyGaussianBlur(cv::Mat input, std::vector<std::vector<double>> vec);
         };
     }
 }
