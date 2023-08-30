@@ -4,10 +4,6 @@
 - OpenCV 
 - Eigen
 
-## Usage
-
-- You can use PlaneSegmentation class to obtain planes.
-
 ## Algorithms Implemented So Far
 - Canny Edge Detector
 
