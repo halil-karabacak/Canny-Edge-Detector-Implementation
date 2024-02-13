@@ -1,15 +1,11 @@
 project(ComputerVisionAlgorithms)
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.10)
 
-set (OpenCV_DIR "D:/OpenCV/build/")
-find_package(OpenCV REQUIRED)
+include_directories(${CMAKE_SOURCE_DIR}/dep/stb)
 
-file(GLOB SOURCES src/*.cpp include/*.h)
+file(GLOB SOURCES src/Image.cpp src/Canny.cpp src/Gaussian.cpp)
 
 add_executable(main ${SOURCES}
 					./main.cpp)
 
-
-target_include_directories(main PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "dep/eigen-3.4.0")
-
-target_link_libraries(main ${OpenCV_LIBS})
+target_include_directories(main PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")

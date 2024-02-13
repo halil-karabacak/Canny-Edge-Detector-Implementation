@@ -1,19 +1,13 @@
-#include "Canny.h"
 #include "Image.h"
-
-
+#include "Gaussian.h"
+#include "Canny.h"
 
 int main()
 {
-    auto image = CV::Utils::Image::loadPNG("../data/buran.jpg");
-    auto mat = image.mat;
-
-    cv::Mat out;
-    out = CV::Detection::GaussianFilter::ApplyGaussianBlur(mat, 5);
+    auto image = CV::Utils::Image::loadPNG("../data/input/buran.jpg");
+    image->RGB2GRAY();
+    std::shared_ptr<CV::Utils::Image> out;
+    CV::Detection::Canny::cannyEdgeDetector(image, out);
+    CV::Utils::Image::saveImageToDisk("../data/export/buran_canny.png", out);
     
-
-    cv::imshow("Gaus Blur", out);
-    cv::imwrite("../data/gaus_blur.png", out);
-
-    cv::waitKey(0);
 }

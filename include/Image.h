@@ -1,32 +1,37 @@
 #pragma once
 
-#include <string>
-#include <vector>
-#include <opencv2/core.hpp>
-#include <opencv2/opencv.hpp>
+#include <memory>
+#include <iostream>
 
 namespace CV {
 	namespace Utils {
-		enum class ImageType {
+		enum class ImageFormat {
 			RGB,
-			BGR,
 			GRAY,
-			DEFAULT
+			DEFAULT // RGB
 		};
 
 		class Image : std::enable_shared_from_this<Image> {
 		public:
 			/**
-			* Reads PNG File from disk, reads it as a BGR.
+			* Reads PNG File from disk, reads it as a RGB.
 			*/
-			static CV::Utils::Image loadPNG(std::string file_path);
+			static std::shared_ptr<CV::Utils::Image> loadPNG(const char* file_path, ImageFormat format =  ImageFormat::DEFAULT);
 			/**
 			* Converts RGB image to Gray-scale. Loads new data to grayData.
 			*/
 			void RGB2GRAY();
 
-			ImageType type = ImageType::DEFAULT;
-			cv::Mat mat;
+			/**
+			 * Saves the image to the disk
+			*/
+			static bool saveImageToDisk(const char* path, const std::shared_ptr<CV::Utils::Image>& image);
+
+			ImageFormat type;
+			int width;
+			int height;
+			int channels;
+			unsigned char* data;
 		};
 	}
 }
