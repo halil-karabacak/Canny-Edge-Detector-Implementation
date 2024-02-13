@@ -14,9 +14,9 @@
 ## Results
 
 #### Test file, Space Shuttle Buran
-<img src="data/buran.jpg" width="800">
+<img src="data/input/buran.jpg" width="800">
 
 #### Result of the Canny Edge Detection on Buran
-<img src="data/canny_out.png" width="800">
+<img src="data/export/buran_canny.png" width="800">
 
 
