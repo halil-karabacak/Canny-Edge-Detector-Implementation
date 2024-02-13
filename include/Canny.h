@@ -1,15 +1,16 @@
 #pragma once
 
-#include <opencv2/core.hpp>
-#include <opencv2/opencv.hpp>
-#include "Gaussian.h"
+#include "Image.h"
+#include <vector>
 
 namespace CV {
 	namespace Detection {
 		class Canny {
 		public:
-			static void nonMaxSupression(const cv::Mat& gradientMagnitude, const cv::Mat& gradientAngle, cv::Mat& output);
-			static void cannyEdgeDetector(const cv::Mat& input, cv::Mat& output);
+			static void cannyEdgeDetector(const std::shared_ptr<CV::Utils::Image> input, std::shared_ptr<CV::Utils::Image>& output);
+		private:
+			static void calculateGradient(const unsigned char* image, int width, int height, std::vector<float>& gradientMagnitude, std::vector<float>& gradientAngle);
+			static void nonMaxSuppression(const std::vector<float>& gradientMagnitude, const std::vector<float>& gradientAngle, int width, int height, unsigned char* output);
 		};
 	}
 }
