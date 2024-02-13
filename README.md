@@ -1,11 +1,8 @@
 # Fundamental Computer Visions Algorithm Implemented in C++ with STL 
 
-## Pre-requisite
-- OpenCV 
-- Eigen
-
 ## Algorithms Implemented So Far
 - Canny Edge Detector
+- Gaussian Blur
 
 ## Working On
 - SIFT  
